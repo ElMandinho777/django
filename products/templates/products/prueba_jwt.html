@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es"><meta charset="utf-8"><title>Prueba de acceso con JWT</title>
+<style>body{font:16px Arial;margin:30px auto;max-width:850px;padding:0 20px;color:#111}h1{font-size:24px}label{display:block;margin:16px 0 6px}textarea{box-sizing:border-box;width:100%;height:75px;font:13px monospace}button{padding:10px 16px;margin:12px 8px 12px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f3f3;padding:16px;font:14px/1.45 monospace}#status{font-weight:bold}</style>
+<h1>Prueba de acceso con JWT</h1>
+<p>Pega el valor access obtenido en <a href="/api/token/" target="_blank">/api/token/</a>.</p>
+<label for="token">Token de acceso</label><textarea id="token" spellcheck="false"></textarea>
+<button id="send">Consultar productos con token</button><button id="without">Consultar sin token</button>
+<pre id="request">GET http://127.0.0.1:8000/api/products/</pre>
+<p id="status">Sin consultar</p><pre id="response"></pre>
+<script>
+async function consultar(autorizado){
+ const token=document.getElementById('token').value.trim();
+ const headers={'Accept':'application/json'};
+ if(autorizado) headers.Authorization='Bearer '+token;
+ document.getElementById('request').textContent='GET '+location.origin+'/api/products/\n'+(autorizado?'Authorization: Bearer '+token:'Sin encabezado Authorization');
+ try {const r=await fetch('/api/products/',{headers,credentials:'omit'});
+ document.getElementById('status').textContent='HTTP '+r.status+' '+r.statusText;
+ document.getElementById('response').textContent=JSON.stringify(await r.json(),null,2);
+ }catch(e){document.getElementById('status').textContent='Error de conexión';}
+}
+document.getElementById('send').onclick=()=>consultar(true);
+document.getElementById('without').onclick=()=>consultar(false);
+</script></html>
