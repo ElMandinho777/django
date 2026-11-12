@@ -29,7 +29,7 @@ class ApiTests(APITestCase):
         self.assertEqual(response.status_code, 401)
 
     def setUp(self):
-        user = get_user_model().objects.create_user('prueba', password='Prueba-2026!')
+        user = get_user_model().objects.create_user('prueba', email='prueba@example.com', password='Prueba-2026!')
         self.client.force_authenticate(user=user)
         self.category = Category.objects.create(name='Electronica')
         self.product = Product.objects.create(
